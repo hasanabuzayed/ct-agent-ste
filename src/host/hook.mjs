@@ -67,8 +67,8 @@ function context(hookEventName, additionalContext) {
 /**
  * Loads the rule layer once for this process.
  *
- * `dist/` is a build artifact that `.gitignore` holds, so a checkout can miss
- * it. The import then fails, and the message names the fix.
+ * `dist/` is a build artifact, so a checkout can miss it. The import then
+ * fails, and the message names the fix.
  */
 let rules;
 

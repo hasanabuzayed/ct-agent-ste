@@ -15,10 +15,7 @@
       "author": {
         "name": "Cameron Austgen"
       },
-      "source": {
-        "source": "npm",
-        "package": "agent-ste"
-      },
+      "source": "./",
       "category": "development",
       "homepage": "https://github.com/ctotheameron/agent-ste"
     }

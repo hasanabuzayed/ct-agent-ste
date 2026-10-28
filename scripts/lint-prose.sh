@@ -5,7 +5,8 @@
 # a document. So this script feeds the linter each tracked file with a known
 # extension, rather than a hand-written list that drifts.
 #
-# `manifest.toml` stays out. Gleam writes that file, so its prose is not ours.
+# `manifest.toml` and `dist/` stay out. Gleam writes them, so their prose is not
+# ours.
 set -euo pipefail
 
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -14,7 +15,7 @@ cd "$root"
 # Every extension src/host/select.mjs reads, as prose or as comments.
 readable='\.(md|mdx|markdown|txt|rst|ts|tsx|js|mjs|cjs|jsx|gleam|go|rs|swift|kt|java|c|h|cpp|sh|bash|zsh|py|rb|yml|yaml|toml|just)$'
 
-mapfile -t files < <(git ls-files | grep -E "$readable" | grep -v '^manifest\.toml$')
+mapfile -t files < <(git ls-files | grep -E "$readable" | grep -vE '^(manifest\.toml|dist/)')
 
 if [ "${#files[@]}" -eq 0 ]; then
   echo "lint-prose: no tracked file matched" >&2
