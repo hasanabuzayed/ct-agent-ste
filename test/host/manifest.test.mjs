@@ -49,6 +49,12 @@ test("the pi entry point exists", () => {
 
 const hooks = JSON.parse(readFileSync(join(root, "hooks/hooks.json"), "utf8"));
 
+// Codex refuses a hooks file with any other top-level key, and then it loads
+// none of the hooks.
+test("hooks file holds only the keys Codex reads", () => {
+  assert.deepEqual(Object.keys(hooks).sort(), ["description", "hooks"]);
+});
+
 // A matcher such as `Write|Edit` fires for the first name only, and it drops
 // the rest in silence. So each tool takes its own entry, and this test stops a
 // future edit from folding them back together.
