@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Fails when dist/ is absent, empty or short of an entry point. `npm publish`
-# must never ship an empty package, and `.gitignore` holds dist/, so no commit
-# proves that the build ran. `build-dist.sh` runs this check at the end, and the
+# must never ship an empty package, and a committed dist/ can be stale, so no
+# commit proves that the build ran. `build-dist.sh` runs this check at the end, and the
 # release workflow runs it again before publish.
 set -euo pipefail
 

@@ -60,9 +60,9 @@ and this project calls them.
 
 - `gleam.toml` sets `target = "javascript"`.
 - Run `./scripts/build-dist.sh` after any change to `src/`. It writes `dist/`.
-- `dist/` is a build artifact, not a source file. `.gitignore` holds it, so do
-  not commit it. `npm publish` builds it first through `prepublishOnly`, so the
-  npm release still ships it.
+- Commit `dist/` after a change to the Gleam code. The marketplace installs the
+  plugin from this repository, and the plugin loads the rule engine from
+  `dist/`. `npm publish` also builds it first through `prepublishOnly`.
 - Add no target-specific FFI. It closes the Erlang option.
 
 ## Where a rule lives

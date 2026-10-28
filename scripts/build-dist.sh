@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Copies the Gleam JavaScript output into dist/. `dist/` is a build artifact,
-# so `.gitignore` holds it. `npm publish` runs this first through
-# `prepublishOnly`, so the npm release ships dist/.
+# Copies the Gleam JavaScript output into dist/. The marketplace installs the
+# plugin from this repository, so commit dist/ after a build. `npm publish` runs
+# this first through `prepublishOnly`, so the npm release ships dist/.
 set -euo pipefail
 
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
