@@ -58,19 +58,18 @@ test("PreToolUse denies a write that breaks a hard rule", async () => {
 
 test("PreToolUse allows a clean write, and adds no context", async () => {
   const result = await respond(write("notes.md", "Start the release now."), ON);
-  assert.equal(decisionOf(result), "allow");
-  assert.equal(result.hookSpecificOutput.additionalContext, undefined);
+  assert.deepEqual(result, {});
 });
 
 test("PreToolUse allows a soft violation, and warns", async () => {
   const result = await respond(write("notes.md", "The bolt was removed."), ON);
-  assert.equal(decisionOf(result), "allow");
+  assert.equal(decisionOf(result), undefined);
   assert.match(result.hookSpecificOutput.additionalContext, /verb\/passive/);
 });
 
 test("PreToolUse reads a code comment, and not an identifier", async () => {
   const clean = await respond(write("a.ts", "const utilize = (x) => x;"), ON);
-  assert.equal(decisionOf(clean), "allow");
+  assert.equal(decisionOf(clean), undefined);
 
   const bad = await respond(write("a.ts", "// We will utilize it."), ON);
   assert.equal(decisionOf(bad), "deny");
@@ -78,8 +77,7 @@ test("PreToolUse reads a code comment, and not an identifier", async () => {
 
 test("PreToolUse allows a file with no prose", async () => {
   const result = await respond(write("a.bin", "initiate initiate"), ON);
-  assert.equal(decisionOf(result), "allow");
-  assert.equal(result.hookSpecificOutput.additionalContext, undefined);
+  assert.deepEqual(result, {});
 });
 
 test("PreToolUse reads the new text of an edit only", async () => {
@@ -126,7 +124,7 @@ test("PreToolUse allows a bash command that commits nothing", async () => {
     }),
     ON,
   );
-  assert.equal(decisionOf(result), "allow");
+  assert.equal(decisionOf(result), undefined);
 });
 
 test("PreToolUse allows a tool it does not know", async () => {
@@ -138,7 +136,7 @@ test("PreToolUse allows a tool it does not know", async () => {
     }),
     ON,
   );
-  assert.equal(decisionOf(result), "allow");
+  assert.equal(decisionOf(result), undefined);
 });
 
 test("Stop blocks a reply that breaks a hard rule", async () => {
@@ -274,7 +272,7 @@ test("an event kind with no rule asks for no action", async () => {
 });
 
 test("an off session checks nothing", async () => {
-  assert.equal(decisionOf(await respond(write("a.md", "Initiate it."), OFF)), "allow");
+  assert.equal(decisionOf(await respond(write("a.md", "Initiate it."), OFF)), undefined);
   assert.deepEqual(await respond(event({ hook_event_name: "SessionStart" }), OFF), {});
   assert.deepEqual(
     await respond(

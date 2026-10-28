@@ -41,14 +41,13 @@ export function failOpen(message) {
   };
 }
 
-function allow(warning) {
-  return {
-    hookSpecificOutput: {
-      hookEventName: "PreToolUse",
-      permissionDecision: "allow",
-      ...(warning === undefined ? {} : { additionalContext: warning }),
-    },
-  };
+/**
+ * A pass gives no permission decision. An "allow" skips the permission prompt
+ * of Claude Code, and Codex refuses it unless the hook also changes the input.
+ * A soft warning goes to the model as context only.
+ */
+function pass(warning) {
+  return warning === undefined ? nothing() : context("PreToolUse", warning);
 }
 
 function deny(reason) {
@@ -121,15 +120,15 @@ function subjectOf(module, toolName, input) {
 function gate({ module, engine }, event) {
   const subject = subjectOf(module, event.tool_name, event.tool_input ?? {});
   if (subject === undefined) {
-    return allow();
+    return pass();
   }
   const result = module.check(engine, subject);
   if (result.reason !== undefined) {
     return deny(result.reason);
   }
   return result.soft.length === 0
-    ? allow()
-    : allow(module.warnReason(subject.label, result.soft));
+    ? pass()
+    : pass(module.warnReason(subject.label, result.soft));
 }
 
 /**
@@ -264,7 +263,7 @@ export async function respond(raw, state) {
   }
   const current = state ?? readState(event.session_id);
   if (!current.enabled) {
-    return event.hook_event_name === "PreToolUse" ? allow() : nothing();
+    return nothing();
   }
   try {
     return await answer(event, current);
